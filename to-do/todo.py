@@ -1,5 +1,6 @@
 import tkinter as tk
 import webbrowser
+from tkinter import messagebox
 
 # Set the filename for the to-do list database
 filename = "todolist.txt"
@@ -51,12 +52,20 @@ def display_list():
 
     # Bind the click event to open the browser
     listbox.bind("<Button-1>", on_list_item_click)
+    listbox.bind("<Button-3>", on_list_item_click)
 
 def on_list_item_click(event):
     index = listbox.nearest(event.y)
     item = listbox.get(index)
-    if item.startswith("http://") or item.startswith("https://"):
-        webbrowser.open_new(item)
+    
+    if event.num == 1:  # Left-click
+        listbox.selection_clear(0, tk.END)
+        listbox.selection_set(index)
+    elif event.num == 3:  # Right-click
+        if item.startswith("http://") or item.startswith("https://"):
+            response = messagebox.askyesno("Confirmation", "Are you sure you want to open this page?")
+            if response:
+                webbrowser.open_new(item)
 
 # Create the main window
 window = tk.Tk()
