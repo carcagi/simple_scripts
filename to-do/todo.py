@@ -1,4 +1,5 @@
 import tkinter as tk
+import webbrowser
 
 # Set the filename for the to-do list database
 filename = "todolist.txt"
@@ -45,7 +46,17 @@ def display_list():
 
     # Add each item to the list display
     for item in items:
-        listbox.insert(tk.END, item.strip())
+        item = item.strip()
+        listbox.insert(tk.END, item)
+
+    # Bind the click event to open the browser
+    listbox.bind("<Button-1>", on_list_item_click)
+
+def on_list_item_click(event):
+    index = listbox.nearest(event.y)
+    item = listbox.get(index)
+    if item.startswith("http://") or item.startswith("https://"):
+        webbrowser.open_new(item)
 
 # Create the main window
 window = tk.Tk()
@@ -60,7 +71,7 @@ add_button = tk.Button(window, text="Add Item", command=add_item)
 add_button.pack()
 
 # Create the list display for showing the to-do list items
-listbox = tk.Listbox(window, width=50)
+listbox = tk.Listbox(window, width=100)
 listbox.pack()
 
 # Create the button for removing selected items
